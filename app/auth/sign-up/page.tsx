@@ -19,6 +19,7 @@ export default function Page() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
+  const [userType, setUserType] = useState<'customer' | 'shop_owner'>('customer')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -43,6 +44,9 @@ export default function Page() {
           emailRedirectTo:
             process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ??
             `${window.location.origin}/auth/callback`,
+          data: {
+            user_type: userType,
+          },
         },
       })
       if (error) throw error
@@ -100,6 +104,18 @@ export default function Page() {
                       value={repeatPassword}
                       onChange={(e) => setRepeatPassword(e.target.value)}
                     />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="userType">I want to</Label>
+                    <select
+                      id="userType"
+                      value={userType}
+                      onChange={(e) => setUserType(e.target.value as 'customer' | 'shop_owner')}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <option value="customer">Find repair services</option>
+                      <option value="shop_owner">Register my repair shop</option>
+                    </select>
                   </div>
                   {error && <p className="text-sm text-red-500">{error}</p>}
                   <Button type="submit" className="w-full" disabled={isLoading}>
