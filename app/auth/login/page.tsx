@@ -39,9 +39,11 @@ export default function Page() {
         },
       })
       if (error) throw error
-      router.push('/protected')
+      router.push('/')
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred'
+      console.error('[v0] Login error:', errorMessage)
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
