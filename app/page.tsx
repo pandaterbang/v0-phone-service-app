@@ -11,14 +11,26 @@ export default async function Home() {
   } = await supabase.auth.getUser()
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-background">
       <Header user={user} />
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Find Phone Repair Shops</h1>
-          <p className="text-lg text-gray-600">Browse trusted phone repair services near you</p>
+      <div className="relative overflow-hidden">
+        {/* Gradient background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 blur-3xl opacity-50"></div>
+          <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-tr from-primary/10 to-secondary/10 blur-3xl opacity-50"></div>
         </div>
-        <ShopGrid />
+
+        <div className="container relative mx-auto px-4 py-12">
+          <div className="mb-12 text-center">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-4">
+              Find Phone Repair Shops
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Browse trusted phone repair services with certified technicians, transparent pricing, and fast turnaround times
+            </p>
+          </div>
+          <ShopGrid />
+        </div>
       </div>
     </main>
   )

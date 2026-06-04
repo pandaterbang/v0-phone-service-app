@@ -17,58 +17,68 @@ interface Shop {
 export default function ShopCard({ shop }: { shop: Shop }) {
   return (
     <Link href={`/shop/${shop.id}`}>
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full">
-        <div className="aspect-video bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+      <div className="group relative h-full overflow-hidden rounded-xl border border-primary/10 bg-card transition-all duration-300 hover:shadow-xl hover:border-primary/30">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+        <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-primary to-accent">
           {shop.image_url ? (
-            <img src={shop.image_url} alt={shop.name} className="w-full h-full object-cover" />
+            <img src={shop.image_url} alt={shop.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
           ) : (
-            <div className="text-white text-4xl">📱</div>
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-6xl opacity-20">📱</div>
+            </div>
           )}
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent"></div>
         </div>
 
-        <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{shop.name}</h3>
+        <div className="relative p-5">
+          <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">{shop.name}</h3>
 
-          <div className="flex items-center gap-1 mb-3">
-            <div className="flex items-center">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-0.5">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
                   className={`w-4 h-4 ${
-                    i < Math.floor(shop.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                    i < Math.floor(shop.rating) ? 'fill-accent text-accent' : 'text-primary/20'
                   }`}
                 />
               ))}
             </div>
-            <span className="text-sm text-gray-600">({shop.rating.toFixed(1)})</span>
+            <span className="text-xs font-medium text-muted-foreground">({shop.rating.toFixed(1)})</span>
           </div>
 
-          <div className="space-y-2 text-sm text-gray-600 mb-4">
-            <div className="flex items-start gap-2">
-              <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              <p className="line-clamp-2">{shop.address}</p>
+          <div className="space-y-3 text-sm text-muted-foreground mb-5">
+            <div className="flex items-start gap-3">
+              <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary" />
+              <p className="line-clamp-2 text-xs">{shop.address}</p>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4" />
-              <a href={`tel:${shop.phone}`} className="hover:text-blue-600">
+            <div className="flex items-center gap-3">
+              <Phone className="w-4 h-4 flex-shrink-0 text-primary" />
+              <a href={`tel:${shop.phone}`} className="text-xs hover:text-primary transition-colors">
                 {shop.phone}
               </a>
             </div>
 
-            <div className="flex items-center gap-2">
-              <MessageCircle className="w-4 h-4" />
-              <a href={`https://wa.me/${shop.whatsapp}`} target="_blank" rel="noreferrer" className="hover:text-blue-600">
+            <div className="flex items-center gap-3">
+              <MessageCircle className="w-4 h-4 flex-shrink-0 text-primary" />
+              <a href={`https://wa.me/${shop.whatsapp}`} target="_blank" rel="noreferrer" className="text-xs hover:text-primary transition-colors">
                 WhatsApp
               </a>
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-            <span className={`text-sm font-medium ${shop.is_open ? 'text-green-600' : 'text-red-600'}`}>
+          <div className="flex items-center justify-between pt-4 border-t border-primary/10">
+            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
+              shop.is_open 
+                ? 'bg-accent/20 text-accent' 
+                : 'bg-destructive/20 text-destructive'
+            }`}>
+              <div className={`w-2 h-2 rounded-full ${shop.is_open ? 'bg-accent' : 'bg-destructive'}`}></div>
               {shop.is_open ? 'Open' : 'Closed'}
-            </span>
-            <span className="text-blue-600 text-sm font-medium">View Details →</span>
+            </div>
+            <span className="text-primary text-xs font-bold group-hover:translate-x-1 transition-transform">→</span>
           </div>
         </div>
       </div>
