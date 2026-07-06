@@ -7,6 +7,7 @@ import Header from '@/components/header'
 import { User } from '@supabase/supabase-js'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import MapLocationPicker from '@/components/map-location-picker'
 
 interface Props {
   user: User | null
@@ -17,6 +18,8 @@ export default function CreateShopForm({ user }: Props) {
   const supabase = createClient()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [latitude, setLatitude] = useState(-6.2088)
+  const [longitude, setLongitude] = useState(106.6456)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -29,8 +32,8 @@ export default function CreateShopForm({ user }: Props) {
       address: formData.get('address'),
       phone: formData.get('phone'),
       whatsapp: formData.get('whatsapp'),
-      latitude: parseFloat(formData.get('latitude') as string),
-      longitude: parseFloat(formData.get('longitude') as string),
+      latitude: latitude,
+      longitude: longitude,
     }
 
     try {
@@ -100,30 +103,16 @@ export default function CreateShopForm({ user }: Props) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">Latitude *</label>
-          <input
-            type="number"
-            name="latitude"
-            step="0.0001"
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="-6.2088"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">Longitude *</label>
-          <input
-            type="number"
-            name="longitude"
-            step="0.0001"
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="106.6456"
-          />
-        </div>
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-3">Shop Location *</label>
+        <MapLocationPicker
+          latitude={latitude}
+          longitude={longitude}
+          onLocationChange={(lat, lng) => {
+            setLatitude(lat)
+            setLongitude(lng)
+          }}
+        />
       </div>
 
       {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>}
