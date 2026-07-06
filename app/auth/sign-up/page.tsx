@@ -39,13 +39,15 @@ export default function Page() {
 
     try {
       console.log('[v0] Sign up attempt with:', { email, userType })
+      const redirectUrl = typeof window !== 'undefined' 
+        ? `${window.location.origin}/auth/callback`
+        : 'http://localhost:3000/auth/callback'
+      
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo:
-            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ??
-            `${window.location.origin}/auth/callback`,
+          emailRedirectTo: redirectUrl,
           data: {
             user_type: userType,
           },

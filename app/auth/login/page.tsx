@@ -30,13 +30,15 @@ export default function Page() {
     setError(null)
 
     try {
+      const redirectUrl = typeof window !== 'undefined' 
+        ? `${window.location.origin}/auth/callback`
+        : 'http://localhost:3000/auth/callback'
+      
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
         options: {
-          emailRedirectTo:
-            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ??
-            `${window.location.origin}/auth/callback`,
+          emailRedirectTo: redirectUrl,
         },
       })
       if (error) throw error
