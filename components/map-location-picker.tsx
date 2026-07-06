@@ -1,7 +1,19 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
+import L from 'leaflet'
+import { useState, useEffect } from 'react'
+import 'leaflet/dist/leaflet.css'
+
+// Fix for leaflet marker icons
+const DefaultIcon = L.icon({
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+})
 
 interface MapLocationPickerProps {
   latitude: number
@@ -9,14 +21,21 @@ interface MapLocationPickerProps {
   onLocationChange: (lat: number, lng: number) => void
 }
 
-const containerStyle = {
-  width: '100%',
-  height: '400px',
+function MapClickHandler({ onLocationChange }: { onLocationChange: (lat: number, lng: number) => void }) {
+  useMapEvents({
+    click(e) {
+      onLocationChange(e.latlng.lat, e.latlng.lng)
+    },
+  })
+  return null
 }
 
-const defaultCenter = {
-  lat: -6.2088,
-  lng: 106.6456, // Default Jakarta
+function MapUpdater({ lat, lng }: { lat: number; lng: number }) {
+  const map = useMap()
+  useEffect(() => {
+    map.setView([lat, lng], map.getZoom())
+  }, [lat, lng, map])
+  return null
 }
 
 export default function MapLocationPicker({
@@ -24,43 +43,23 @@ export default function MapLocationPicker({
   longitude,
   onLocationChange,
 }: MapLocationPickerProps) {
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
-  })
-
-  const [markerPos, setMarkerPos] = useState({
-    lat: latitude || defaultCenter.lat,
-    lng: longitude || defaultCenter.lng,
-  })
+  const [markerPos, setMarkerPos] = useState<[number, number]>([latitude, longitude])
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    setMarkerPos({
-      lat: latitude || defaultCenter.lat,
-      lng: longitude || defaultCenter.lng,
-    })
-  }, [latitude, longitude])
+    setIsClient(true)
+  }, [])
 
-  const handleMapClick = (e: google.maps.MapMouseEvent) => {
-    if (e.latLng) {
-      const lat = e.latLng.lat()
-      const lng = e.latLng.lng()
-      setMarkerPos({ lat, lng })
-      onLocationChange(lat, lng)
-    }
+  const handleMarkerDragEnd = (e: any) => {
+    const lat = e.target.getLatLng().lat
+    const lng = e.target.getLatLng().lng
+    setMarkerPos([lat, lng])
+    onLocationChange(lat, lng)
   }
 
-  const handleMarkerDragEnd = (e: google.maps.MapMouseEvent) => {
-    if (e.latLng) {
-      const lat = e.latLng.lat()
-      const lng = e.latLng.lng()
-      setMarkerPos({ lat, lng })
-      onLocationChange(lat, lng)
-    }
-  }
-
-  if (!isLoaded) {
+  if (!isClient) {
     return (
-      <div className="w-full h-96 bg-muted flex items-center justify-center rounded-lg border border-primary/20">
+      <div className="w-full h-96 bg-muted flex items-center justify-center rounded-xl border border-primary/10">
         <p className="text-muted-foreground">Loading map...</p>
       </div>
     )
@@ -68,38 +67,42 @@ export default function MapLocationPicker({
 
   return (
     <div className="space-y-3">
-      <div className="rounded-lg overflow-hidden border border-primary/20">
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={markerPos}
-          zoom={17}
-          onClick={handleMapClick}
-          options={{
-            mapTypeControl: true,
-            fullscreenControl: true,
-            zoomControl: true,
-            streetViewControl: false,
-          }}
-        >
+      <div className="rounded-xl overflow-hidden border border-primary/10 shadow-sm h-96">
+        <MapContainer center={markerPos} zoom={15} style={{ height: '100%', width: '100%' }}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
           <Marker
             position={markerPos}
             draggable={true}
-            onDragEnd={handleMarkerDragEnd}
-            title="Click and drag to set location"
+            eventHandlers={{
+              dragend: handleMarkerDragEnd,
+            }}
+            icon={DefaultIcon}
           />
-        </GoogleMap>
+          <MapClickHandler
+            onLocationChange={(lat, lng) => {
+              setMarkerPos([lat, lng])
+              onLocationChange(lat, lng)
+            }}
+          />
+          <MapUpdater lat={markerPos[0]} lng={markerPos[1]} />
+        </MapContainer>
       </div>
+
       <p className="text-xs text-muted-foreground">
-        Click on the map or drag the marker to set your shop location
+        Klik peta untuk set lokasi atau drag marker untuk memindahkan lokasi toko
       </p>
-      <div className="grid grid-cols-2 gap-3 text-sm">
-        <div className="bg-muted p-3 rounded-lg">
-          <p className="text-muted-foreground text-xs">Latitude</p>
-          <p className="font-mono font-semibold text-foreground">{markerPos.lat.toFixed(6)}</p>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-primary/5 p-3 rounded-lg border border-primary/10">
+          <p className="text-xs text-muted-foreground mb-1">Latitude</p>
+          <p className="font-mono font-bold text-primary">{markerPos[0].toFixed(6)}</p>
         </div>
-        <div className="bg-muted p-3 rounded-lg">
-          <p className="text-muted-foreground text-xs">Longitude</p>
-          <p className="font-mono font-semibold text-foreground">{markerPos.lng.toFixed(6)}</p>
+        <div className="bg-primary/5 p-3 rounded-lg border border-primary/10">
+          <p className="text-xs text-muted-foreground mb-1">Longitude</p>
+          <p className="font-mono font-bold text-primary">{markerPos[1].toFixed(6)}</p>
         </div>
       </div>
     </div>
