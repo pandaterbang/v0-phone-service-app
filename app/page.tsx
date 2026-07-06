@@ -23,7 +23,7 @@ export default async function Home() {
         <div className="container relative mx-auto px-4 py-12">
           <div className="mb-12 text-center">
             <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-4">
-              Find Phone Repair Shops
+              Temukan Toko Servis HP Terbaikmu
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Browse trusted phone repair services with certified technicians, transparent pricing, and fast turnaround times
