@@ -3,14 +3,15 @@ import { notFound } from 'next/navigation'
 import Header from '@/components/header'
 import { MapPin, Phone, MessageCircle, Star, Clock, AlertCircle } from 'lucide-react'
 
-export default async function ShopPage({ params }: { params: { id: string } }) {
+export default async function ShopPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
 
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { data: shop, error } = await supabase.from('shops').select('*').eq('id', params.id).single()
+  const { data: shop, error } = await supabase.from('shops').select('*').eq('id', id).single()
 
   if (error || !shop) {
     notFound()
