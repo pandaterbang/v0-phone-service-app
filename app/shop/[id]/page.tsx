@@ -40,8 +40,8 @@ export default async function ShopPage({ params }: { params: { id: string } }) {
 
         <div className="container relative mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main content */}
-          <div className="lg:col-span-2">
+            {/* Main content */}
+            <div className="lg:col-span-2">
             {/* Shop Header Image */}
             <div className="bg-gradient-to-br from-primary to-primary/60 rounded-2xl h-64 mb-6 flex items-center justify-center overflow-hidden shadow-lg relative group">
               {shop.image_url ? (
@@ -182,10 +182,10 @@ export default async function ShopPage({ params }: { params: { id: string } }) {
                 </div>
               )}
             </div>
-          </div>
+            </div>
 
-          {/* Sidebar - CTA */}
-          <div className="lg:col-span-1">
+            {/* Sidebar - CTA */}
+            <div className="lg:col-span-1">
             <div className="bg-gradient-to-br from-primary/10 to-accent/5 border border-primary/20 rounded-2xl p-6 sticky top-24 shadow-lg">
               <h3 className="text-xl font-bold text-foreground mb-5">Hubungi Toko</h3>
               <div className="space-y-3">
@@ -206,6 +206,7 @@ export default async function ShopPage({ params }: { params: { id: string } }) {
                   WhatsApp
                 </a>
               </div>
+            </div>
             </div>
           </div>
         </div>
