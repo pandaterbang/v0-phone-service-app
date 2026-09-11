@@ -22,24 +22,39 @@ export default function AddServiceForm({ shopId }: Props) {
     setError(null)
 
     const formData = new FormData(e.currentTarget)
+    const name = String(formData.get('name') || '').trim()
+    const category = String(formData.get('category') || '').trim()
+    const price = Number(formData.get('price'))
+    const brandValue = String(formData.get('brand') || '').trim()
+    const descriptionValue = String(formData.get('description') || '').trim()
+
+    if (!name || !category || !Number.isFinite(price) || price < 0) {
+      setError('Lengkapi nama, kategori, dan harga layanan dengan benar.')
+      setIsLoading(false)
+      return
+    }
+
     const data = {
       shop_id: shopId,
-      name: formData.get('name'),
-      category: formData.get('category'),
-      brand: formData.get('brand') || null,
-      price: parseInt(formData.get('price') as string),
-      description: formData.get('description') || null,
+      name,
+      category,
+      brand: brandValue || null,
+      price: Math.round(price),
+      description: descriptionValue || null,
     }
 
     try {
-      const { error: insertError } = await supabase.from('repair_services').insert([data])
+      const { error: insertError } = await supabase.from('repair_services').insert(data)
 
-      if (insertError) throw insertError
+      if (insertError) {
+        console.error('[v0] Failed to insert repair service:', insertError)
+        throw new Error(insertError.message)
+      }
 
       router.push(`/dashboard/shop/${shopId}`)
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to add service')
+      setError(err instanceof Error ? err.message : 'Gagal menambahkan layanan. Coba lagi.')
     } finally {
       setIsLoading(false)
     }
@@ -48,23 +63,23 @@ export default function AddServiceForm({ shopId }: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
       <div>
-        <label className="block text-sm font-medium text-gray-900 mb-2">Service Name *</label>
+        <label className="block text-sm font-medium text-foreground mb-2">Service Name *</label>
         <input
           type="text"
           name="name"
           required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-primary/30 bg-input text-foreground placeholder:text-muted-foreground rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
           placeholder="e.g., iPhone Screen Replacement"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">Category *</label>
+          <label className="block text-sm font-medium text-foreground mb-2">Category *</label>
           <select
             name="category"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-primary/30 bg-input text-foreground placeholder:text-muted-foreground rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
           >
             <option value="">Select a category</option>
             <option value="Screen Repair">Screen Repair</option>
@@ -78,10 +93,10 @@ export default function AddServiceForm({ shopId }: Props) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">Brand</label>
+          <label className="block text-sm font-medium text-foreground mb-2">Brand</label>
           <select
             name="brand"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-primary/30 bg-input text-foreground placeholder:text-muted-foreground rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
           >
             <option value="">Select a brand</option>
             <option value="Apple">Apple</option>
@@ -97,33 +112,33 @@ export default function AddServiceForm({ shopId }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-900 mb-2">Price (Rp) *</label>
+        <label className="block text-sm font-medium text-foreground mb-2">Price (Rp) *</label>
         <input
           type="number"
           name="price"
           required
           min="0"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-primary/30 bg-input text-foreground placeholder:text-muted-foreground rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
           placeholder="50000"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-900 mb-2">Description</label>
+        <label className="block text-sm font-medium text-foreground mb-2">Description</label>
         <textarea
           name="description"
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-primary/30 bg-input text-foreground placeholder:text-muted-foreground rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary/70"
           placeholder="Describe this service in detail"
         />
       </div>
 
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>}
+      {error && <div className="bg-destructive/10 border border-destructive/40 text-destructive px-4 py-3 rounded-lg">{error}</div>}
 
       <div className="flex gap-4">
         <Link
           href={`/dashboard/shop/${shopId}`}
-          className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-900 rounded-lg hover:bg-gray-50"
+          className="flex items-center gap-2 px-4 py-2 border border-primary/30 text-foreground rounded-lg hover:bg-primary/10"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -131,7 +146,7 @@ export default function AddServiceForm({ shopId }: Props) {
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          className="flex-1 bg-primary text-primary-foreground font-semibold py-3 px-4 rounded-lg hover:bg-primary/90 cyber-glow disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Adding...' : 'Add Service'}
         </button>
