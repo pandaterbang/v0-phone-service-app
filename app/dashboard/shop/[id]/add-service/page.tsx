@@ -3,7 +3,8 @@ import { redirect, notFound } from 'next/navigation'
 import Header from '@/components/header'
 import AddServiceForm from '@/components/add-service-form'
 
-export default async function AddServicePage({ params }: { params: { id: string } }) {
+export default async function AddServicePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
 
   const {
@@ -14,7 +15,7 @@ export default async function AddServicePage({ params }: { params: { id: string 
     redirect('/auth/login')
   }
 
-  const { data: shop } = await supabase.from('shops').select('*').eq('id', params.id).eq('user_id', user.id).single()
+  const { data: shop } = await supabase.from('shops').select('*').eq('id', id).eq('user_id', user.id).single()
 
   if (!shop) {
     notFound()
