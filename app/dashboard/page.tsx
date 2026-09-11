@@ -50,7 +50,7 @@ export default async function Dashboard() {
                   </div>
                   <div className="text-sm text-gray-600 space-y-1">
                     <p>📞 {shop.phone}</p>
-                    <p>⭐ {shop.rating.toFixed(1)} rating</p>
+                    <p>⭐ {Number(shop.rating ?? 0).toFixed(1)} rating</p>
                   </div>
                   <div className="mt-4 pt-4 border-t border-gray-100">
                     <span className="text-blue-600 text-sm font-medium">Manage Shop →</span>

@@ -93,7 +93,7 @@ export default async function ManageShopPage({ params }: { params: Promise<{ id:
                         />
                       ))}
                     </div>
-                    <span className="text-foreground font-bold">{shop.rating.toFixed(1)}</span>
+                    <span className="text-foreground font-bold">{Number(shop.rating ?? 0).toFixed(1)}</span>
                   </div>
                 </div>
               </div>

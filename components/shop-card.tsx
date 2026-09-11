@@ -45,7 +45,7 @@ export default function ShopCard({ shop }: { shop: Shop }) {
                 />
               ))}
             </div>
-            <span className="text-xs font-medium text-muted-foreground">({shop.rating.toFixed(1)})</span>
+            <span className="text-xs font-medium text-muted-foreground">({Number(shop.rating ?? 0).toFixed(1)})</span>
           </div>
 
           <div className="space-y-3 text-sm text-muted-foreground mb-5">
@@ -56,16 +56,14 @@ export default function ShopCard({ shop }: { shop: Shop }) {
 
             <div className="flex items-center gap-3">
               <Phone className="w-4 h-4 flex-shrink-0 text-primary" />
-              <a href={`tel:${shop.phone}`} className="text-xs hover:text-primary transition-colors">
+              <span className="text-xs text-muted-foreground">
                 {shop.phone}
-              </a>
+              </span>
             </div>
 
             <div className="flex items-center gap-3">
               <MessageCircle className="w-4 h-4 flex-shrink-0 text-primary" />
-              <a href={`https://wa.me/${shop.whatsapp}`} target="_blank" rel="noreferrer" className="text-xs hover:text-primary transition-colors">
-                WhatsApp
-              </a>
+              <span className="text-xs text-muted-foreground">WhatsApp</span>
             </div>
           </div>
 
