@@ -17,10 +17,10 @@ interface Shop {
 export default function ShopCard({ shop }: { shop: Shop }) {
   return (
     <Link href={`/shop/${shop.id}`}>
-      <div className="group relative h-full overflow-hidden rounded-xl border border-primary/10 bg-card transition-all duration-300 hover:shadow-xl hover:border-primary/30">
+      <div className="group relative h-full overflow-hidden rounded-xl border border-primary/25 bg-card/90 transition-all duration-300 hover:border-primary/70 hover:cyber-glow">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-        <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-primary to-accent">
+        <div className="relative aspect-video overflow-hidden border-b border-primary/20 bg-primary/10 cyber-scanlines">
           {shop.image_url ? (
             <img src={shop.image_url} alt={shop.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
           ) : (
@@ -28,7 +28,7 @@ export default function ShopCard({ shop }: { shop: Shop }) {
               <div className="text-6xl opacity-20">📱</div>
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-primary/10"></div>
         </div>
 
         <div className="relative p-5">
@@ -69,7 +69,7 @@ export default function ShopCard({ shop }: { shop: Shop }) {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-primary/10">
+          <div className="flex items-center justify-between pt-4 border-t border-primary/20">
             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
               shop.is_open 
                 ? 'bg-accent/20 text-accent' 

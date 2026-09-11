@@ -49,24 +49,24 @@
 }
 
 :root {
-  --background: oklch(0.98 0.001 260);
-  --foreground: oklch(0.15 0.01 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.01 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.01 260);
-  --primary: oklch(0.5 0.12 260);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.7 0.08 260);
-  --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.95 0.005 260);
-  --muted-foreground: oklch(0.5 0.03 260);
-  --accent: oklch(0.55 0.12 260);
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0.01 260);
-  --input: oklch(0.95 0.005 260);
-  --ring: oklch(0.6 0.1 260);
+  --background: oklch(0.09 0.025 265);
+  --foreground: oklch(0.94 0.035 190);
+  --card: oklch(0.13 0.035 265);
+  --card-foreground: oklch(0.94 0.035 190);
+  --popover: oklch(0.14 0.04 265);
+  --popover-foreground: oklch(0.94 0.035 190);
+  --primary: oklch(0.82 0.17 190);
+  --primary-foreground: oklch(0.1 0.03 265);
+  --secondary: oklch(0.68 0.2 320);
+  --secondary-foreground: oklch(0.98 0.02 190);
+  --muted: oklch(0.18 0.04 265);
+  --muted-foreground: oklch(0.68 0.06 210);
+  --accent: oklch(0.76 0.2 320);
+  --accent-foreground: oklch(0.1 0.03 265);
+  --destructive: oklch(0.68 0.2 25);
+  --border: oklch(0.29 0.08 250);
+  --input: oklch(0.16 0.04 265);
+  --ring: oklch(0.82 0.17 190);
   --chart-1: oklch(0.55 0.12 260);
   --chart-2: oklch(0.5 0.12 250);
   --chart-3: oklch(0.6 0.08 270);
@@ -123,8 +123,23 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: linear-gradient(oklch(0.82 0.17 190 / 0.035) 1px, transparent 1px), linear-gradient(90deg, oklch(0.82 0.17 190 / 0.035) 1px, transparent 1px);
+    background-size: 42px 42px;
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer utilities {
+  .cyber-glow {
+    box-shadow: 0 0 24px oklch(0.82 0.17 190 / 0.22), inset 0 0 18px oklch(0.82 0.17 190 / 0.04);
+  }
+  .cyber-glow-pink {
+    box-shadow: 0 0 24px oklch(0.76 0.2 320 / 0.22);
+  }
+  .cyber-scanlines {
+    background-image: linear-gradient(oklch(1 0 0 / 0.035) 1px, transparent 1px);
+    background-size: 100% 4px;
   }
 }

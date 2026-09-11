@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'My Phone Service',
-  description: 'Find the best phone repair shops near you',
+  title: 'MY PHONE SERVICE // CYBER NETWORK',
+  description: 'Temukan layanan servis HP terpercaya di jaringan cyber lokal.',
   generator: 'v0.app',
   icons: {
     icon: [
