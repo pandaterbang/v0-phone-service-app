@@ -9,16 +9,16 @@ export default function Header({ user }: { user: User | null }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-40 border-b border-primary/10 bg-gradient-to-r from-background to-background via-primary/5">
+    <header className="sticky top-0 z-40 border-b border-primary/30 bg-background/90 backdrop-blur-xl cyber-scanlines">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2 font-bold text-xl hover:opacity-80 transition-opacity">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent shadow-md">
-                <Smartphone className="w-6 h-6 text-white" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-primary/70 bg-primary/10 cyber-glow">
+                <Smartphone className="w-6 h-6 text-primary" />
               </div>
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                My Phone Service
+              <span className="font-mono tracking-widest text-primary">
+                MY_PHONE_SERVICE
               </span>
             </Link>
             <nav className="hidden md:flex gap-6">
